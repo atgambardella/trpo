@@ -8,6 +8,7 @@ import logging
 import gym
 from gym import envs, scoreboard
 from gym.spaces import Discrete, Box
+from gym.wrappers import Monitor
 import prettytensor as pt
 from space_conversion import SpaceConversionEnv
 import tempfile
@@ -79,7 +80,7 @@ class TRPOAgent(object):
       self.gf = GetFlat(self.session, var_list)
       self.sff = SetFromFlat(self.session, var_list)
       self.vf = VF(self.session)
-      self.session.run(tf.initialize_all_variables())
+      self.session.run(tf.global_variables_initializer())
 
     def act(self, obs, *args):
       obs = np.expand_dims(obs, 0)
@@ -203,7 +204,8 @@ if __name__ == "__main__":
     task = "RepeatCopy-v0"
 
   env = envs.make(task)
-  env.monitor.start(training_dir)
+  env = Monitor(env, training_dir)
+  #env.render()
 
   env = SpaceConversionEnv(env, Box, Discrete)
 
