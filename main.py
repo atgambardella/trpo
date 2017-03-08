@@ -44,6 +44,11 @@ class TRPOAgent(object):
       self.oldaction_dist = oldaction_dist = tf.placeholder(dtype, shape=[None, env.action_space.n], name="oldaction_dist")
 
       # Create neural network.
+      """
+      action_dist_n, _ = (pt.wrap(self.obs).
+                          conv2d(depth=64, activation_fn=tf.nn.tanh).
+                          softmax_classifier(env.action_space.n))
+      """
       action_dist_n, _ = (pt.wrap(self.obs).
                           fully_connected(64, activation_fn=tf.nn.tanh).
                           softmax_classifier(env.action_space.n))
